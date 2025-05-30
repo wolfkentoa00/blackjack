@@ -1,73 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Game</title>
-    <link rel="stylesheet" href="blackjack.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blackjack Game</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/blackjack.css">
 </head>
 <body>
-    <div id="game-container">
-        <header id="game-header">
-            <div class="logo">Blackjack</div>
-            <!-- Deck Pile Visual -->
-            <div id="deck-pile-visual-container">
-                <div id="deck-pile-visual"></div>
-            </div>
-            <div id="balance-display" class="balance">Balance: $1000.00</div>
-        </header>
+  <div id="game-container">
+    <header id="game-header">
+      <div class="logo">Blackjack</div>
+      <div id="deck-pile-visual-container">
+        <div id="deck-pile-visual"></div>
+      </div>
+      <div id="balance-display" class="balance">Balance: $1000.00</div>
+    </header>
 
-        <div id="game-table">
-            <div id="dealer-area" class="hand-area">
-                <div class="hand-label-container">
-                    <span id="dealer-score" class="score-chip">0</span>
-                </div>
-                <div id="dealer-cards" class="cards-container">
-                    <!-- Cards will be dynamically added here -->
-                </div>
-            </div>
-
-            <div id="game-message-area">
-                <p id="game-message">Set your bet and click Deal!</p>
-                <div id="insurance-controls" class="hidden">
-                    <p id="insurance-message">Dealer shows an Ace. Insurance pays 2 to 1.</p>
-                    <button id="take-insurance-btn">Take Insurance</button>
-                    <button id="no-insurance-btn">No Insurance</button>
-                </div>
-            </div>
-
-            <div id="player-area" class="hand-area">
-                <div class="hand-label-container">
-                    <span id="player-score" class="score-chip">0</span>
-                </div>
-                <div id="player-cards" class="cards-container">
-                    <!-- Cards will be dynamically added here -->
-                </div>
-            </div>
+    <div id="game-table">
+      <div id="dealer-area" class="hand-area">
+        <div class="hand-label-container">
+          <span id="dealer-score" class="score-chip">0</span>
         </div>
+        <div id="dealer-cards" class="cards-container"></div>
+      </div>
 
-        <footer id="game-controls">
-            <div id="betting-controls">
-                <div class="bet-amount-controls">
-                    <label for="bet-amount-input">Bet Amount:</label>
-                    <input type="number" id="bet-amount-input" value="10" min="1">
-                </div>
-                <div class="bet-modifier-buttons">
-                    <button id="bet-half-btn">1/2</button>
-                    <button id="bet-double-btn">2x</button>
-                    <button id="bet-max-btn">MAX</button>
-                </div>
-                <button id="deal-bet-btn" class="action-button primary-action">BET</button>
-            </div>
+      <div id="game-message-area">
+        <p id="game-message">Set your bet and click Deal!</p>
+        <div id="insurance-controls" class="hidden">
+          <p id="insurance-message">Dealer shows an Ace. Insurance pays 2 to 1.</p>
+          <button id="take-insurance-btn">Take Insurance</button>
+          <button id="no-insurance-btn">No Insurance</button>
+        </div>
+      </div>
 
-            <div id="in-game-actions" class="hidden">
-                <button id="hit-btn" class="action-button">HIT</button>
-                <button id="stand-btn" class="action-button">STAND</button>
-                <button id="double-down-btn" class="action-button">DOUBLE</button>
-            </div>
-        </footer>
+      <div id="player-area" class="hand-area">
+        <div class="hand-label-container">
+          <span id="player-score" class="score-chip">0</span>
+        </div>
+        <div id="player-cards" class="cards-container"></div>
+      </div>
     </div>
 
-    <script src="blackjack.js"></script>
+    <footer id="game-controls">
+      <div id="betting-controls">
+        <div class="bet-amount-controls">
+          <label for="bet-amount-input">Bet Amount:</label>
+          <input type="number" id="bet-amount-input" value="10" min="1">
+        </div>
+        <div class="bet-modifier-buttons">
+          <button id="bet-half-btn">1/2</button>
+          <button id="bet-double-btn">2x</button>
+          <button id="bet-max-btn">MAX</button>
+        </div>
+        <button id="deal-bet-btn" class="action-button primary-action">BET</button>
+      </div>
+
+      <div id="in-game-actions" class="hidden">
+        <button id="hit-btn" class="action-button">HIT</button>
+        <button id="stand-btn" class="action-button">STAND</button>
+        <button id="double-down-btn" class="action-button">DOUBLE</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JavaScript loaded with defer to wait for HTML -->
+  <script src="https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/blackjack.js" defer></script>
 </body>
 </html>
