@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stake</title>
+  <style>
+      .green-text {
+          color: rgb(0, 255, 50); /* Green color */
+      }
+  </style>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <div class="logo">Stake</div>
+      <nav>
+        <ul>
+          <li><a href="#">Casino</a></li>
+          <li><a href="#">Sports</a></li>
+          <li><a href="#">Promotions</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="wallet">
+      <span id="balance">$1,000,000</span>
+      <button onclick="addFunds()">+ Add $1M</button>
+    </div>
+  </header>  <main>
+    <section class="featured">
+       <h1><span class="green-text">Stake</span></h1>
+      <p>*Gamble Responsibly*</p>
+    </section><section class="games">
+  <div class="game-grid">
+    <div class="game-card" onclick="loadGame('dice')">
+      <img src="images/dice-thumbnail.png" alt="Dice">
+      <span>Dice</span>
+    </div>
+    <div class="game-card" onclick="loadGame('crash')">
+      <img src="images/crash-thumbnail.png" alt="Crash">
+      <span>Crash</span>
+    </div>
+    <div class="game-card" onclick="loadGame('roulette')">
+      <img src="images/roulette-thumbnail.png" alt="Roulette">
+      <span>Roulette</span>
+    </div>
+    <div class="game-card" onclick="loadGame('slots')">
+      <img src="images/slots-thumbnail.png" alt="Slots">
+      <span>Slots</span>
+    </div>
+    <div class="game-card" onclick="loadGame('blackjack')">
+      <img src="images/blackjack-thumbnail.png" alt="Blackjack">
+      <span>Blackjack</span>
+    </div>
+    <div class="game-card" onclick="loadGame('plinko')">
+      <img src="images/plinko-thumbnail.png" alt="Plinko">
+      <span>Plinko</span>
+    </div>
+  </div>
+</section>
+
+<section id="game-container">
+  <!-- Game will load here -->
+</section>
+
+  </main>  <footer>
+    <p>FakeStake is a demo. No real money involved.</p>
+  </footer>
+</body>
+</html>
