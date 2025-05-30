@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stake Roulette</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/games.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo" onclick="window.location.href='https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/index.html'">Stake</div>
+        <div class="balance-display" id="balanceDisplay"></div>
+    </div>
+    <div class="game-container">
+        <canvas id="rouletteWheel"></canvas>
+        <div class="roulette-table">
+            <div class="numbers-grid"></div>
+            <div class="betting-options">
+                <button class="bet-option" data-type="red">Red</button>
+                <button class="bet-option" data-type="black">Black</button>
+                <button class="bet-option" data-type="even">Even</button>
+                <button class="bet-option" data-type="odd">Odd</button>
+                <button class="bet-option" data-type="1-18">1-18</button>
+                <button class="bet-option" data-type="19-36">19-36</button>
+            </div>
+        </div>
+        <div class="controls">
+            <div class="bet-controls">
+                <input type="number" id="betAmount" value="1000" min="1000" step="1000">
+                <button onclick="setMaxBet()" class="max-bet">Max</button>
+                <button id="spinButton" onclick="spin()">Spin</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/roulette.js"></script>
+</body>
+</html>
