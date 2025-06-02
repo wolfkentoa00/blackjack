@@ -10,9 +10,7 @@ body {
     align-items: center;
     min-height: 100vh;
     overflow: hidden;
-}
-.logo-img {
-  height: 200px;
+
 }
 #game-container {
     width: 95%;
@@ -75,7 +73,8 @@ body {
     transform: none;
     z-index: 1000;
 }
-
+.logo-img {
+  height: 200px;
 .hand-label {
     color: #8a9bad;
     font-size: 0.9em;
