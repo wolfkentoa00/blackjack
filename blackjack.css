@@ -1,71 +1,77 @@
 /* General Styles */
 body {
-  font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
-  background-color: #0f212e;
-  color: #e0e0e0;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  overflow: hidden;
+    font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+    background-color: #0f212e;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
 }
 
 #game-container {
-  width: 95%;
-  max-width: 900px;
-  min-height: 600px;
-  background-color: #1a2c3a;
-  border-radius: 10px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.5);
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  box-sizing: border-box;
+    width: 95%;
+    max-width: 900px;
+    min-height: 600px;
+    background-color: #1a2c3a;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
 /* Header */
 #game-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  border-bottom: 1px solid #2a3f50;
-  margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #2a3f50;
+    margin-bottom: 15px;
+}
+
+#game-header .logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #fff;
 }
 
 #game-header .balance {
-  font-size: 1.2em;
-  color: #5cb85c;
-  font-weight: bold;
+    font-size: 1.2em;
+    color: #5cb85c;
+    font-weight: bold;
 }
 
 /* Game Table & Hand Areas */
 #game-table {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 10px 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 0;
 }
 
 .hand-area {
-  min-height: 200px;
-  position: relative;
-  margin: 10px 0;
+    min-height: 200px;
+    position: relative;
+    margin: 10px 0;
 }
 
 .hand-label-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  position: absolute;
-  top: -5px;
-  right: 70px;
-  left: auto;
-  transform: none;
-  z-index: 1000;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: absolute;
+    top: -5px;
+    right: 70px; /* Adjusted to move it from the far right edge */
+    left: auto;
+    transform: none;
+    z-index: 1000;
 }
 
 .hand-label {
@@ -160,4 +166,114 @@ body {
     background-image: linear-gradient(135deg, #4a5c6a 25%, transparent 25%),
                       linear-gradient(225deg, #4a5c6a 25%, transparent 25%),
                       linear-gradient(45deg, #4a5c6a 25%, transparent 25%),
-                      linear-gradient(315deg, #4a5c6a
+                      linear-gradient(315deg, #4a5c6a 25%, transparent 25%);
+    background-size: 10px 10px;
+    background-position: 0 0, 0 0, 0 0, 0 0;
+    color: transparent;
+}
+.card.face-down .card-info-top-left {
+    display: none;
+}
+
+
+/* Game Message Area */
+#game-message-area {
+    text-align: center;
+    padding: 10px 0;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    margin: 10px 20px;
+}
+#game-message {
+    font-size: 1.1em;
+    color: #fff;
+    font-weight: bold;
+    margin: 5px 0;
+}
+#insurance-controls p {
+    margin: 5px 0 10px 0;
+    font-size: 1em;
+}
+#insurance-controls button {
+    background-color: #5bc0de;
+    color: white;
+    margin: 0 5px;
+}
+
+
+/* Footer Controls */
+#game-controls {
+    padding: 15px 10px;
+    border-top: 1px solid #2a3f50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#betting-controls, #in-game-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+#betting-controls > div { margin: 5px 10px; }
+
+.bet-amount-controls { display: flex; align-items: center; }
+.bet-amount-controls label { margin-right: 8px; font-size: 0.9em; }
+#bet-amount-input {
+    width: 80px;
+    padding: 8px;
+    background-color: #0f212e;
+    border: 1px solid #2a3f50;
+    color: #e0e0e0;
+    border-radius: 4px;
+    text-align: right;
+    font-size: 1em;
+}
+
+.bet-modifier-buttons button, .action-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0 3px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    min-width: 60px;
+}
+
+.bet-modifier-buttons button {
+    background-color: #4a5c6a;
+    color: #e0e0e0;
+}
+.bet-modifier-buttons button:hover { background-color: #5a6c7a; }
+
+.action-button {
+    background-color: #2a3f50;
+    color: #e0e0e0;
+}
+.action-button:hover { background-color: #3a4f60; }
+
+.action-button.primary-action {
+    background-color: #2ecc71;
+    color: #fff;
+    padding: 12px 25px; /* WAS: padding: 12 - MISSING px and SEMICOLON */
+    font-size: 1em;
+}
+.action-button.primary-action:hover { background-color: #27ae60; }
+
+.action-button:disabled {
+    background-color: #333;
+    color: #777;
+    cursor: not-allowed;
+}
+.action-button:active, .bet-modifier-buttons button:active { transform: scale(0.97); }
+
+.hidden { display: none !important; }
