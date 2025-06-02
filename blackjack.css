@@ -42,9 +42,9 @@ body {
     color: #fff;
 } */
 
-/* Added new styles for the image logo */
+/* Adjusted styles for the image logo */
 #game-header .logo-image {
-    height: 40px; /* Adjust height as needed */
+    height: 40px; /* Reduced height to make it smaller */
     width: auto; /* Maintain aspect ratio */
 }
 
@@ -271,7 +271,7 @@ body {
 .action-button.primary-action {
     background-color: #2ecc71;
     color: #fff;
-    padding: 12px 25px; /* WAS: padding: 12 - MISSING px and SEMICOLON */
+    padding: 12px 25px;
     font-size: 1em;
 }
 .action-button.primary-action:hover { background-color: #27ae60; }
