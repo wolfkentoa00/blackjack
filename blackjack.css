@@ -8,14 +8,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  overflow: hidden;
+  min-height: 100vh; /* Ensure body takes full viewport height */
+  /* Removed 'overflow: hidden;' from body to allow scrolling if content overflows */
 }
 
 #game-container {
-  width: 95%;
-  max-width: 900px;
-  min-height: 600px;
+  width: 95%; /* Keep width relative */
+  max-width: 900px; /* Max width remains good */
+  min-height: 80vh; /* Allow it to be at least 80% of viewport height, adjust as needed */
   background-color: #1a2c3a;
   border-radius: 10px;
   box-shadow: 0 0 30px rgba(0,0,0,0.5);
@@ -23,6 +23,8 @@ body {
   flex-direction: column;
   padding: 15px;
   box-sizing: border-box;
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds its height */
+  -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
 }
 
 /* Header */
@@ -33,6 +35,14 @@ body {
   padding: 10px 20px;
   border-bottom: 1px solid #2a3f50;
   margin-bottom: 15px;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+/* Logo Adjustment */
+.logo img {
+  height: 40px; /* Set a desired height for the logo */
+  width: auto;   /* Crucial for maintaining aspect ratio */
+  max-width: 150px; /* Optional: Set a max-width if the logo is very wide */
 }
 
 #game-header .balance {
@@ -43,17 +53,19 @@ body {
 
 /* Game Table & Hand Areas */
 #game-table {
-  flex-grow: 1;
+  flex-grow: 1; /* Allows game-table to take up available space */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 10px 0;
+  /* Consider adding overflow-y: auto; here if dealer/player areas might overflow vertically */
 }
 
 .hand-area {
-  min-height: 200px;
+  min-height: 150px; /* Reduced min-height for better scaling */
   position: relative;
   margin: 10px 0;
+  flex-shrink: 1; /* Allow hand areas to shrink if necessary */
 }
 
 .hand-label-container {
@@ -101,28 +113,28 @@ body {
 
 /* Cards Container and Card Styling */
 .cards-container {
-    position: relative; /* Essential for absolute positioning of child .card elements */
-    min-height: 180px; /* Allows space for cards to fan down */
-    display: flex; /* Used to help center the block of absolutely positioned cards */
-    justify-content: center; /* Centers the starting point of the card group */
-    align-items: flex-start; /* Cards will be positioned from the top by JS */
-    padding-top: 10px; /* Small padding at the top of the container */
+    position: relative;
+    min-height: 140px; /* Reduced min-height for cards */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 10px;
 }
 
 .card {
-    width: 80px; /* CARD_ELEMENT_WIDTH in JS should match this */
-    height: 120px;
+    width: 70px; /* Reduced card width */
+    height: 105px; /* Reduced card height (maintains 2:3 aspect ratio) */
     background-color: #fff;
     border: 1px solid #bbb;
     border-radius: 8px;
     box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-    position: absolute; /* Cards are positioned by JS (left, top) */
-    padding: 5px; /* Internal padding of the card */
+    position: absolute;
+    padding: 5px;
     box-sizing: border-box;
     font-weight: bold;
     transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-    opacity: 0; /* Start hidden for animation */
-    transform-origin: center center; /* For any potential transform animations */
+    opacity: 0;
+    transform-origin: center center;
 }
 
 .card.visible {
@@ -174,7 +186,7 @@ body {
 #game-message-area {
     text-align: center;
     padding: 10px 0;
-    min-height: 60px;
+    min-height: 50px; /* Reduced min-height for messages */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -182,6 +194,7 @@ body {
     background-color: rgba(0,0,0,0.1);
     border-radius: 5px;
     margin: 10px 20px;
+    flex-shrink: 0; /* Prevent message area from shrinking too much */
 }
 #game-message {
     font-size: 1.1em;
@@ -207,6 +220,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-shrink: 0; /* Prevent controls from shrinking */
 }
 
 #betting-controls, #in-game-actions {
@@ -214,7 +228,7 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allow elements to wrap to the next line on smaller screens */
 }
 #betting-controls > div { margin: 5px 10px; }
 
@@ -258,7 +272,7 @@ body {
 .action-button.primary-action {
     background-color: #2ecc71;
     color: #fff;
-    padding: 12px 25px; /* WAS: padding: 12 - MISSING px and SEMICOLON */
+    padding: 12px 25px;
     font-size: 1em;
 }
 .action-button.primary-action:hover { background-color: #27ae60; }
@@ -271,3 +285,151 @@ body {
 .action-button:active, .bet-modifier-buttons button:active { transform: scale(0.97); }
 
 .hidden { display: none !important; }
+
+
+/* --- Media Queries for Responsive Scaling --- */
+
+/* For screens with a max height of 700px OR max width of 600px */
+@media (max-height: 700px), (max-width: 600px) {
+  #game-container {
+    padding: 10px; /* Less padding on container */
+    min-height: 90vh; /* Take up more of the viewport height on smaller screens */
+  }
+
+  #game-header {
+    padding: 5px 10px; /* Smaller header padding */
+    margin-bottom: 10px;
+  }
+
+  .logo img {
+    height: 30px; /* Smaller logo */
+  }
+
+  #game-header .balance {
+    font-size: 1em;
+  }
+
+  .hand-area {
+    min-height: 120px; /* Further reduce hand area height */
+    margin: 5px 0;
+  }
+
+  .cards-container {
+    min-height: 100px; /* Further reduce card container height */
+    padding-top: 5px;
+  }
+
+  .card {
+    width: 60px; /* Even smaller cards */
+    height: 90px;
+    border-radius: 6px;
+  }
+
+  .card-info-top-left .rank { font-size: 1.8em; }
+  .card-info-top-left .suit { font-size: 2.5em; }
+
+
+  #game-message-area {
+    min-height: 40px; /* Smaller message area */
+    margin: 5px 10px;
+    padding: 5px 0;
+  }
+
+  #game-message {
+    font-size: 1em;
+  }
+
+  #insurance-controls p {
+    font-size: 0.9em;
+  }
+
+
+  #game-controls {
+    padding: 10px 5px;
+  }
+
+  #betting-controls, #in-game-actions {
+    flex-direction: row; /* Keep them in a row */
+    justify-content: center; /* Center horizontally */
+    flex-wrap: wrap; /* Allow wrapping */
+  }
+
+  .bet-amount-controls label { font-size: 0.8em; }
+  #bet-amount-input {
+    width: 60px;
+    padding: 5px;
+    font-size: 0.85em;
+  }
+
+  .bet-modifier-buttons button, .action-button {
+    padding: 6px 10px;
+    font-size: 0.8em;
+    min-width: 45px;
+    margin: 2px; /* Adjust margin for wrapped items */
+  }
+
+  .action-button.primary-action {
+    padding: 8px 15px;
+    font-size: 0.85em;
+  }
+}
+
+/* For very small screens (e.g., iPhone SE in landscape, very short windows) */
+@media (max-height: 500px) {
+    #game-container {
+        min-height: 98vh; /* Allow it to take up almost full viewport height */
+        padding: 5px;
+    }
+    #game-header {
+      margin-bottom: 5px;
+      padding: 5px;
+    }
+    .logo img {
+      height: 25px; /* Even smaller logo */
+    }
+
+    .hand-area {
+        min-height: 90px; /* Even smaller hand area */
+        margin: 2px 0;
+    }
+    .cards-container {
+        min-height: 70px; /* Even smaller card container */
+        padding-top: 2px;
+    }
+    .card {
+        width: 50px; /* Smallest card size */
+        height: 75px;
+    }
+    .card-info-top-left .rank { font-size: 1.5em; }
+    .card-info-top-left .suit { font-size: 2em; }
+
+    #game-message-area {
+        min-height: 30px;
+        margin: 2px 5px;
+        padding: 2px 0;
+    }
+    #game-message {
+      font-size: 0.9em;
+    }
+
+    #game-controls {
+      padding: 5px;
+    }
+    .bet-amount-controls label { font-size: 0.75em; }
+    #bet-amount-input {
+      width: 50px;
+      padding: 3px;
+      font-size: 0.8em;
+    }
+
+    .bet-modifier-buttons button, .action-button {
+      padding: 4px 8px;
+      font-size: 0.75em;
+      min-width: 40px;
+      margin: 1px;
+    }
+    .action-button.primary-action {
+      padding: 6px 12px;
+      font-size: 0.8em;
+    }
+}
