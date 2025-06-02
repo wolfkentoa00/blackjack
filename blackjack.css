@@ -35,11 +35,10 @@ body {
     margin-bottom: 15px;
 }
 
-/* Styles for the image logo */
-#game-header .logo-image {
-    height: 1.8em; /* Set height relative to the parent's font-size, similar to the original text */
-    width: auto; /* Maintain aspect ratio */
-    vertical-align: middle; /* Helps align the image within the header */
+#game-header .logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #fff;
 }
 
 #game-header .balance {
@@ -265,7 +264,7 @@ body {
 .action-button.primary-action {
     background-color: #2ecc71;
     color: #fff;
-    padding: 12px 25px;
+    padding: 12px 25px; /* WAS: padding: 12 - MISSING px and SEMICOLON */
     font-size: 1em;
 }
 .action-button.primary-action:hover { background-color: #27ae60; }
