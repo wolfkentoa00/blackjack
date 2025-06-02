@@ -35,11 +35,11 @@ body {
     margin-bottom: 15px;
 }
 
-/* Adjusted styles for the image logo to approximate font size */
+/* Styles for the image logo */
 #game-header .logo-image {
     height: 1.8em; /* Set height relative to the parent's font-size, similar to the original text */
     width: auto; /* Maintain aspect ratio */
-    vertical-align: middle; /* Helps align the image with other text/elements if any */
+    vertical-align: middle; /* Helps align the image within the header */
 }
 
 #game-header .balance {
