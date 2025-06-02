@@ -35,19 +35,6 @@ body {
   margin-bottom: 15px;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-}
-
-.logo-img {
-  height: 80px;
-  width: auto;
-  max-width: 100%;
-}
-
 #game-header .balance {
   font-size: 1.2em;
   color: #5cb85c;
