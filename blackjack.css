@@ -35,17 +35,11 @@ body {
     margin-bottom: 15px;
 }
 
-/* Removed the .logo class styles */
-/* #game-header .logo {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: #fff;
-} */
-
-/* Adjusted styles for the image logo */
+/* Adjusted styles for the image logo to approximate font size */
 #game-header .logo-image {
-    height: 40px; /* Reduced height to make it smaller */
+    height: 1.8em; /* Set height relative to the parent's font-size, similar to the original text */
     width: auto; /* Maintain aspect ratio */
+    vertical-align: middle; /* Helps align the image with other text/elements if any */
 }
 
 #game-header .balance {
