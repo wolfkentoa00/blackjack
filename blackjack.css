@@ -26,14 +26,12 @@ body {
 }
 
 /* Header */
-#game-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    border-bottom: 1px solid #2a3f50;
-    margin-bottom: 15px;
+#game-header .balance {
+    font-size: 1.2em;
+    color: #5cb85c;
+    font-weight: bold;
 }
+
 #game-header .balance {
     font-size: 1.2em;
     color: #5cb85c;
