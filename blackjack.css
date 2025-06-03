@@ -50,7 +50,6 @@ body {
 }
 
 .stake-logo {
-    .stake-logo {
     width: 90px !important;
     height: auto !important;
     border: none; /* Removed the border for a cleaner look, add back if you like */
