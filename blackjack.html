@@ -10,9 +10,7 @@
 <body>
     <div id="game-container">
         <header id="game-header">
-
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Stake-com-logo-high-res.jpg/2048px-Stake-com-logo-high-res.jpg" alt="Stake.com Logo" class="stake-logo">
-
             <div id="deck-pile-visual-container">
                 <div id="deck-pile-visual"></div>
             </div>
@@ -66,7 +64,21 @@
     </footer>
   </div>
 
-  <!-- JavaScript loaded with defer to wait for HTML -->
+  <div id="balance-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <span class="modal-close-btn">&times;</span>
+        <h2>Manage Funds</h2>
+        <p id="modal-error-message" class="error-text"></p>
+        <div class="modal-input-group">
+            <label for="fund-amount-input">Amount:</label>
+            <input type="number" id="fund-amount-input" placeholder="Enter amount">
+        </div>
+        <div class="modal-actions">
+            <button id="deposit-btn" class="action-button">Deposit</button>
+            <button id="withdraw-btn" class="action-button">Withdraw</button>
+        </div>
+    </div>
+  </div>
   <script src="https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/blackjack.js" defer></script>
 </body>
 </html>
