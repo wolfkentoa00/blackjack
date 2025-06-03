@@ -50,8 +50,9 @@ body {
 }
 
 .stake-logo {
-    width: 90px;   /* Adjusted to 45px, feel free to change this value */
-    height: auto;  /* Maintains the image's aspect ratio */
+    .stake-logo {
+    width: 90px !important;
+    height: auto !important;
     border: none; /* Removed the border for a cleaner look, add back if you like */
     border-radius: 4px; /* Keeps slightly rounded corners if you add a border or background */
     /* padding: 1px; Removed padding as there's no border */
