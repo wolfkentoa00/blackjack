@@ -21,15 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const bettingControlsUI = document.getElementById('betting-controls');
     const inGameActionsUI = document.getElementById('in-game-actions');
 
-    // START: New DOM Elements for Balance Modal
-    const balanceModal = document.getElementById('balance-modal');
-    const closeModalBtn = document.querySelector('.modal-close-btn');
-    const fundAmountInput = document.getElementById('fund-amount-input');
-    const depositBtn = document.getElementById('deposit-btn');
-    const withdrawBtn = document.getElementById('withdraw-btn');
-    const modalErrorMessage = document.getElementById('modal-error-message');
-    // END: New DOM Elements for Balance Modal
-
     // Game State Variables
     let deck = [];
     let playerHand = [];
@@ -48,24 +39,24 @@ document.addEventListener('DOMContentLoaded', () => {
         'A': 11, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10
     };
 
-    const CARD_X_OFFSET = 70;
-    const CARD_Y_OFFSET = 25;
-    const CARD_ELEMENT_WIDTH = 80;
+    // Card display offsets
+    const CARD_X_OFFSET = 70; // Horizontal offset for each new card in a hand
+    const CARD_Y_OFFSET = 25; // Vertical offset for each new card in a hand
+    const CARD_ELEMENT_WIDTH = 80; // The width of a single card element in pixels
 
     // --- UTILITY FUNCTIONS ---
     function createDeck() {
-        deck = [];
-        const numberOfDecks = 6;
-        for (let d = 0; d < numberOfDecks; d++) {
-            for (let suit of SUITS) {
-                for (let value of VALUES) {
-                    deck.push({ suit, value });
-                }
+    deck = [];
+    const numberOfDecks = 6;
+    for (let d = 0; d < numberOfDecks; d++) {
+        for (let suit of SUITS) {
+            for (let value of VALUES) {
+                deck.push({ suit, value });
             }
         }
-        shuffleDeck();
     }
-
+    shuffleDeck();
+}
     function shuffleDeck() {
         for (let i = deck.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -107,14 +98,27 @@ document.addEventListener('DOMContentLoaded', () => {
             cardDiv.appendChild(cardInfoTopLeft);
         }
 
-        const containerWidth = container.offsetWidth;
+        // --- Card Positioning Logic ---
+        const containerWidth = container.offsetWidth; // Get the current width of the card container div
+
+        // Determine the number of cards currently in the specific hand being rendered.
+        // currentHandRef should be the actual hand array (playerHand or dealerHand).
         const handCardCount = currentHandRef && currentHandRef.length > 0 ? currentHandRef.length : 1;
+
+        // Calculate the total visual width that all cards in this hand will occupy.
+        // This includes the width of one card, plus the accumulated horizontal offsets for subsequent cards.
         const totalVisualWidthOfHand = (handCardCount - 1) * CARD_X_OFFSET + CARD_ELEMENT_WIDTH;
+
+        // Calculate the starting 'left' position for the first card in the hand
+        // to ensure the entire group of cards is centered within the container.
+        // It's the center of the container minus half the total width of the hand.
         const baseLeftOffsetForCentering = (containerWidth / 2) - (totalVisualWidthOfHand / 2);
 
+        // The actual 'left' position for the current card (cardIndex) is:
+        // the centering offset + its own offset based on its position in the hand.
         cardDiv.style.left = (baseLeftOffsetForCentering + (cardIndex * CARD_X_OFFSET)) + 'px';
-        cardDiv.style.top = (cardIndex * CARD_Y_OFFSET) + 'px';
-        cardDiv.style.zIndex = cardIndex;
+        cardDiv.style.top = (cardIndex * CARD_Y_OFFSET) + 'px'; // Stacking offset from the top
+        cardDiv.style.zIndex = cardIndex; // Ensures cards stack with later cards on top
 
         container.appendChild(cardDiv);
         setTimeout(() => cardDiv.classList.add('visible'), 50 + (cardIndex * 100));
@@ -499,46 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dealBetBtn.textContent = "DEAL";
     }
 
-    // --- START: New functions for balance modal ---
-    function openBalanceModal() {
-        fundAmountInput.value = '';
-        modalErrorMessage.textContent = '';
-        balanceModal.classList.remove('hidden');
-    }
-
-    function closeBalanceModal() {
-        balanceModal.classList.add('hidden');
-    }
-
-    function handleDeposit() {
-        const amount = parseFloat(fundAmountInput.value);
-        modalErrorMessage.textContent = '';
-        if (isNaN(amount) || amount <= 0) {
-            modalErrorMessage.textContent = 'Please enter a valid positive amount.';
-            return;
-        }
-        balance += amount;
-        updateBalanceDisplay();
-        closeBalanceModal();
-    }
-
-    function handleWithdraw() {
-        const amount = parseFloat(fundAmountInput.value);
-        modalErrorMessage.textContent = '';
-        if (isNaN(amount) || amount <= 0) {
-            modalErrorMessage.textContent = 'Please enter a valid positive amount.';
-            return;
-        }
-        if (amount > balance) {
-            modalErrorMessage.textContent = 'Cannot withdraw more than your current balance.';
-            return;
-        }
-        balance -= amount;
-        updateBalanceDisplay();
-        closeBalanceModal();
-    }
-    // --- END: New functions for balance modal ---
-
     // --- EVENT LISTENERS ---
     dealBetBtn.addEventListener('click', () => {
         if (dealBetBtn.textContent === "BET" || dealBetBtn.textContent === "DEAL") {
@@ -561,19 +525,6 @@ document.addEventListener('DOMContentLoaded', () => {
     betMaxBtn.addEventListener('click', () => {
         betAmountInput.value = Math.max(1, balance);
     });
-
-    // --- START: New Event Listeners for Balance Modal ---
-    balanceDisplay.addEventListener('click', openBalanceModal);
-    closeModalBtn.addEventListener('click', closeBalanceModal);
-    balanceModal.addEventListener('click', (event) => {
-        // Close modal if the overlay is clicked, but not the content inside it
-        if (event.target === balanceModal) {
-            closeBalanceModal();
-        }
-    });
-    depositBtn.addEventListener('click', handleDeposit);
-    withdrawBtn.addEventListener('click', handleWithdraw);
-    // --- END: New Event Listeners for Balance Modal ---
 
     // Initialize Game
     updateBalanceDisplay();
