@@ -46,15 +46,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- UTILITY FUNCTIONS ---
     function createDeck() {
-        deck = [];
+    deck = [];
+    const numberOfDecks = 6;
+    for (let d = 0; d < numberOfDecks; d++) {
         for (let suit of SUITS) {
             for (let value of VALUES) {
                 deck.push({ suit, value });
             }
         }
-        shuffleDeck();
     }
-
+    shuffleDeck();
+}
     function shuffleDeck() {
         for (let i = deck.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
