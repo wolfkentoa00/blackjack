@@ -65,6 +65,13 @@ body {
     vertical-align: middle;
 }
 
+.center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .hand-area {
     /* CHANGED: Reduced min-height to allow for more flexibility */
     min-height: 150px;
