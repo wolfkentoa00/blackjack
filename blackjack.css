@@ -34,13 +34,6 @@ body {
     border-bottom: 1px solid #2a3f50;
     margin-bottom: 15px;
 }
-
-#game-header .logo {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: #fff;
-}
-
 #game-header .balance {
     font-size: 1.2em;
     color: #5cb85c;
@@ -64,6 +57,10 @@ body {
     /* padding: 1px; Removed padding as there's no border */
     /* box-shadow: 0 1px 3px rgba(0,0,0,0.1); Removed shadow, can be added back */
     display: block; /* Ensures it behaves as a block element for layout */
+}
+
+.logo {
+    vertical-align: middle; /* Helps align if it were inline with text */
 }
 
 .hand-area {
