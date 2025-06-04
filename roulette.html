@@ -1,38 +1,49 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stake Roulette</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/games.css">
+    <title>Roulette - Casino Style</title>
+    <link rel="stylesheet" href="roulette.css">
 </head>
 <body>
-    <div class="header">
-        <div class="logo" onclick="window.location.href='https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/index.html'">Stake</div>
-        <div class="balance-display" id="balanceDisplay"></div>
-    </div>
-    <div class="game-container">
-        <canvas id="rouletteWheel"></canvas>
-        <div class="roulette-table">
-            <div class="numbers-grid"></div>
-            <div class="betting-options">
-                <button class="bet-option" data-type="red">Red</button>
-                <button class="bet-option" data-type="black">Black</button>
-                <button class="bet-option" data-type="even">Even</button>
-                <button class="bet-option" data-type="odd">Odd</button>
-                <button class="bet-option" data-type="1-18">1-18</button>
-                <button class="bet-option" data-type="19-36">19-36</button>
+    <div id="game-container">
+        <header id="game-header">
+            <div id="balance-display" class="balance">Balance: $1000.00</div>
+            <div id="game-logo">ROULETTE</div>
+            <div id="message-area" class="message">Place your bets!</div>
+        </header>
+
+        <main id="game-main">
+            <div id="wheel-section">
+                <div id="wheel-container">
+                    <div id="wheel">
+                        </div>
+                    <div id="ball-track">
+                        <div id="ball"></div>
+                    </div>
+                    <div id="wheel-center-cover"></div>
+                </div>
             </div>
-        </div>
-        <div class="controls">
-            <div class="bet-controls">
-                <input type="number" id="betAmount" value="1000" min="1000" step="1000">
-                <button onclick="setMaxBet()" class="max-bet">Max</button>
-                <button id="spinButton" onclick="spin()">Spin</button>
+
+            <div id="betting-section">
+                <div id="betting-table">
+                    </div>
             </div>
-        </div>
+        </main>
+
+        <footer id="game-controls">
+            <div id="chip-selection-area">
+                <div class="chip-rail">
+                    </div>
+            </div>
+            <div id="action-buttons-area">
+                <button id="spin-button" class="action-button primary-action">SPIN</button>
+                <button id="clear-bets-button" class="action-button">CLEAR BETS</button>
+            </div>
+        </footer>
     </div>
-    <script src="https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/roulette.js"></script>
+
+    <script src="roulette.js"></script>
 </body>
 </html>
