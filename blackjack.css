@@ -37,10 +37,13 @@ body {
     margin-bottom: 15px;
     flex-shrink: 0; /* Prevents header from shrinking */
 }
+/* blackjack.css */
+
 #game-header .balance {
     font-size: 1.2em;
     color: #5cb85c;
     font-weight: bold;
+    text-shadow: 0 0 8px #5cb85c, 0 0 10px rgba(92, 184, 92, 0.7); /* Added this line for the glow */
 }
 
 /* Game Table & Hand Areas */
