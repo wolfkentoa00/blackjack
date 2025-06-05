@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home | Schoology</title>
   <link rel="icon" href="https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.powerschool.com/solutions/personalized-learning/schoology-learning/&size=256" type="image/png">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/blackjack.css">
+  <link rel="stylesheet" href="blackjack.css">
 </head>
 <body>
     <div id="game-container">
@@ -48,7 +48,7 @@
       <div id="betting-controls">
         <div class="bet-amount-controls">
           <label for="bet-amount-input">Bet Amount:</label>
-          <input type="number" id="bet-amount-input" value="10.00" min="0.01" step="0.01">
+          <input type="number" id="bet-amount-input" value="10" min="1">
         </div>
         <div class="bet-modifier-buttons">
           <button id="bet-half-btn">1/2</button>
@@ -66,6 +66,7 @@
     </footer>
   </div>
 
+  <!-- JavaScript loaded with defer to wait for HTML -->
   <script src="https://cdn.jsdelivr.net/gh/wolfkentoa00/blackjack@main/blackjack.js" defer></script>
 </body>
 </html>
