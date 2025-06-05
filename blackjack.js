@@ -1,519 +1,343 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
-    const balanceDisplay = document.getElementById('balance-display');
-    const dealerScoreDisplay = document.getElementById('dealer-score');
-    const playerScoreDisplay = document.getElementById('player-score');
-    const dealerCardsContainer = document.getElementById('dealer-cards');
-    const playerCardsContainer = document.getElementById('player-cards');
-    const gameMessage = document.getElementById('game-message');
-    const insuranceControls = document.getElementById('insurance-controls');
-    const insuranceMessage = document.getElementById('insurance-message');
-    const takeInsuranceBtn = document.getElementById('take-insurance-btn');
-    const noInsuranceBtn = document.getElementById('no-insurance-btn');
-    const betAmountInput = document.getElementById('bet-amount-input');
-    const betHalfBtn = document.getElementById('bet-half-btn');
-    const betDoubleBtn = document.getElementById('bet-double-btn');
-    const betMaxBtn = document.getElementById('bet-max-btn');
-    const dealBetBtn = document.getElementById('deal-bet-btn');
-    const hitBtn = document.getElementById('hit-btn');
-    const standBtn = document.getElementById('stand-btn');
-    const doubleDownBtn = document.getElementById('double-down-btn');
-    const bettingControlsUI = document.getElementById('betting-controls');
-    const inGameActionsUI = document.getElementById('in-game-actions');
-
-    // Game State Variables
-    let deck = [];
-    let playerHand = [];
-    let dealerHand = [];
-    let playerScore = 0;
-    let dealerScore = 0;
-    let balance = 1000; // Initial balance
-    let currentBet = 0;
-    let insuranceBet = 0;
-    let gameInProgress = false;
-    let playerTurn = false;
-
-    const SUITS = ['♥', '♦', '♣', '♠'];
-    const VALUES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    const CARD_VALUE_MAP = {
-        'A': 11, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10
-    };
-
-    // Card display offsets
-    const CARD_X_OFFSET = 70; // Horizontal offset for each new card in a hand
-    const CARD_Y_OFFSET = 25; // Vertical offset for each new card in a hand
-    const CARD_ELEMENT_WIDTH = 80; // The width of a single card element in pixels
-
-    // --- UTILITY FUNCTIONS ---
-    function createDeck() {
-    deck = [];
-    const numberOfDecks = 6;
-    for (let d = 0; d < numberOfDecks; d++) {
-        for (let suit of SUITS) {
-            for (let value of VALUES) {
-                deck.push({ suit, value });
-            }
-        }
-    }
-    shuffleDeck();
+/* General Styles */
+body {
+    font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+    background-color: #0f212e;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* REMOVED: overflow: hidden; It's better to see and fix overflow issues. */
 }
-    function shuffleDeck() {
-        for (let i = deck.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [deck[i], deck[j]] = [deck[j], deck[i]];
-        }
+
+#game-container {
+    width: 95%;
+    max-width: 900px;
+    /* CHANGED: Replaced min-height with a more flexible approach */
+    height: 95vh; /* Use viewport height */
+    max-height: 700px; /* Optional: sets a max height on very tall screens */
+    background-color: #1a2c3a;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* Header */
+#game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #2a3f50;
+    margin-bottom: 15px;
+    flex-shrink: 0; /* Prevents header from shrinking */
+}
+/* blackjack.css */
+
+#game-header .balance {
+    font-size: 1.2em;
+    color: #5cb85c;
+    font-weight: bold;
+    text-shadow: 0 0 8px #5cb85c, 0 0 10px rgba(92, 184, 92, 0.7); /* Added this line for the glow */
+}
+
+/* Game Table & Hand Areas */
+#game-table {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; /* Changed to space-around for better vertical distribution */
+    padding: 10px 0;
+    overflow: hidden; /* Prevents cards from spilling out during animations */
+}
+
+.stake-logo {
+    width: 90px !important;
+    height: auto !important;
+    border: none;
+    border-radius: 4px;
+    display: block;
+}
+
+.logo {
+    vertical-align: middle;
+}
+
+.center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hand-area {
+    /* CHANGED: Reduced min-height to allow for more flexibility */
+    min-height: 150px;
+    position: relative;
+    margin: 10px 0;
+    display: flex; /* Added flex to help with card container alignment */
+    align-items: center;
+    justify-content: center;
+}
+
+.hand-label-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: absolute;
+    top: -5px;
+    right: 15px; /* Adjusted position */
+    left: auto;
+    transform: none;
+    z-index: 1000;
+}
+
+.hand-label {
+    color: #8a9bad;
+    font-size: 0.9em;
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.score-chip {
+    background-color: #2a3f50;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.score-chip.win { background-color: #5cb85c; }
+.score-chip.lose { background-color: #ff1d1d; }
+.score-chip.push { background-color: #5bc0de; }
+
+/* Cards Container and Card Styling */
+.cards-container {
+    position: relative;
+    /* CHANGED: Flexible height and width */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically center the card block */
+}
+
+.card {
+    width: 80px;
+    height: 120px;
+    background-color: #fff;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    position: absolute;
+    padding: 5px;
+    box-sizing: border-box;
+    font-weight: bold;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out, width 0.3s ease, height 0.3s ease; /* Added transitions for size */
+    opacity: 0;
+    transform-origin: center center;
+}
+
+.card.visible {
+    opacity: 1;
+}
+
+.card-info-top-left {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    text-align: center;
+}
+
+.card-info-top-left .rank {
+    font-size: 2em;
+    line-height: 1;
+    display: block;
+}
+
+.card-info-top-left .suit {
+    font-size: 3em;
+    line-height: 1;
+    display: block;
+    margin-top: 1px;
+}
+
+.card.red { color: #ff0000; }
+.card.black { color: #131313; }
+
+.card.face-down {
+    background-color: #3a4c5a;
+    background-image: linear-gradient(135deg, #4a5c6a 25%, transparent 25%),
+                      linear-gradient(225deg, #4a5c6a 25%, transparent 25%),
+                      linear-gradient(45deg, #4a5c6a 25%, transparent 25%),
+                      linear-gradient(315deg, #4a5c6a 25%, transparent 25%);
+    background-size: 10px 10px;
+    background-position: 0 0, 0 0, 0 0, 0 0;
+    color: transparent;
+}
+.card.face-down .card-info-top-left {
+    display: none;
+}
+
+
+/* Game Message Area */
+#game-message-area {
+    text-align: center;
+    padding: 10px 0;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    margin: 10px 20px;
+    flex-shrink: 0; /* Prevents message area from shrinking */
+}
+#game-message {
+    font-size: 1.1em;
+    color: #fff;
+    font-weight: bold;
+    margin: 5px 0;
+}
+#insurance-controls p {
+    margin: 5px 0 10px 0;
+    font-size: 1em;
+}
+#insurance-controls button {
+    background-color: #5bc0de;
+    color: white;
+    margin: 0 5px;
+}
+
+
+/* Footer Controls */
+#game-controls {
+    padding: 15px 10px;
+    border-top: 1px solid #2a3f50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0; /* Prevents controls from shrinking */
+}
+
+#betting-controls, #in-game-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 10px; /* Use gap for spacing between flex items */
+}
+#betting-controls > div { margin: 0; /* Removed margin as gap is used now */ }
+
+.bet-amount-controls { display: flex; align-items: center; }
+.bet-amount-controls label { margin-right: 8px; font-size: 0.9em; }
+#bet-amount-input {
+    width: 80px;
+    padding: 8px;
+    background-color: #0f212e;
+    border: 1px solid #2a3f50;
+    color: #e0e0e0;
+    border-radius: 4px;
+    text-align: right;
+    font-size: 1em;
+}
+
+.bet-modifier-buttons button, .action-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0; /* Removed margin */
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    min-width: 60px;
+}
+
+.bet-modifier-buttons button {
+    background-color: #4a5c6a;
+    color: #e0e0e0;
+}
+.bet-modifier-buttons button:hover { background-color: #5a6c7a; }
+
+.action-button {
+    background-color: #2a3f50;
+    color: #e0e0e0;
+}
+.action-button:hover { background-color: #3a4f60; }
+
+.action-button.primary-action {
+    background-color: #2ecc71;
+    color: #fff;
+    padding: 12px 25px; /* Corrected original code */
+    font-size: 1em;
+}
+.action-button.primary-action:hover { background-color: #27ae60; }
+
+.action-button:disabled {
+    background-color: #333;
+    color: #777;
+    cursor: not-allowed;
+}
+.action-button:active, .bet-modifier-buttons button:active { transform: scale(0.97); }
+
+.hidden { display: none !important; }
+
+/* =============================================== */
+/* NEW: Media Queries for Responsiveness           */
+/* =============================================== */
+@media (max-width: 768px) and (max-height: 650px), (max-width: 480px) {
+
+    #game-container {
+        height: 100vh; /* Fill the entire screen height */
+        width: 100%;   /* Fill the entire screen width */
+        border-radius: 0;
+        padding: 5px;
+    }
+    
+    .hand-area {
+        min-height: 120px; /* Reduce hand area height */
     }
 
-    function dealCard(hand, container, isDealer, isHidden = false) {
-        if (deck.length === 0) createDeck();
-        const card = deck.pop();
-        hand.push(card);
-        renderCard(card, container, isHidden, hand.length - 1, isDealer, hand);
-        return card;
+    /* Scale down the cards */
+    .card {
+        width: 60px;
+        height: 90px;
+    }
+    .card-info-top-left .rank {
+        font-size: 1.5em;
+    }
+    .card-info-top-left .suit {
+        font-size: 2em;
     }
 
-    function renderCard(card, container, isHidden, cardIndex, isDealerHand, currentHandRef) {
-        const cardDiv = document.createElement('div');
-        cardDiv.classList.add('card');
-
-        if (isHidden) {
-            cardDiv.classList.add('face-down');
-        } else {
-            const color = (card.suit === '♥' || card.suit === '♦') ? 'red' : 'black';
-            cardDiv.classList.add(color);
-
-            const cardInfoTopLeft = document.createElement('div');
-            cardInfoTopLeft.classList.add('card-info-top-left');
-
-            const rankDisplay = document.createElement('div');
-            rankDisplay.classList.add('rank');
-            rankDisplay.textContent = card.value;
-            cardInfoTopLeft.appendChild(rankDisplay);
-
-            const suitDisplay = document.createElement('div');
-            suitDisplay.classList.add('suit');
-            suitDisplay.textContent = card.suit;
-            cardInfoTopLeft.appendChild(suitDisplay);
-
-            cardDiv.appendChild(cardInfoTopLeft);
-        }
-
-        const containerWidth = container.offsetWidth;
-        const handCardCount = currentHandRef && currentHandRef.length > 0 ? currentHandRef.length : 1;
-        const totalVisualWidthOfHand = (handCardCount - 1) * CARD_X_OFFSET + CARD_ELEMENT_WIDTH;
-        const baseLeftOffsetForCentering = (containerWidth / 2) - (totalVisualWidthOfHand / 2);
-        cardDiv.style.left = (baseLeftOffsetForCentering + (cardIndex * CARD_X_OFFSET)) + 'px';
-        cardDiv.style.top = (cardIndex * CARD_Y_OFFSET) + 'px';
-        cardDiv.style.zIndex = cardIndex;
-
-        container.appendChild(cardDiv);
-        setTimeout(() => cardDiv.classList.add('visible'), 50 + (cardIndex * 100));
+    /* Adjust control buttons for smaller screens */
+    #betting-controls {
+        flex-direction: column; /* Stack betting controls */
+        gap: 15px;
     }
 
-
-    function calculateScore(hand) {
-        let score = 0;
-        let aceCount = 0;
-        for (let card of hand) {
-            score += CARD_VALUE_MAP[card.value];
-            if (card.value === 'A') {
-                aceCount++;
-            }
-        }
-        while (score > 21 && aceCount > 0) {
-            score -= 10;
-            aceCount--;
-        }
-        return score;
+    .action-button, .bet-modifier-buttons button {
+        padding: 8px 12px;
+        font-size: 0.8em;
     }
 
-    function updateScores() {
-        playerScore = calculateScore(playerHand);
-        playerScoreDisplay.textContent = playerScore;
-
-        const revealedDealerHand = dealerHand.filter(card => card.isRevealed !== false);
-        dealerScore = calculateScore(revealedDealerHand);
-
-        if (dealerHand.length > 1 && dealerHand[1].isRevealed === false) {
-             dealerScoreDisplay.textContent = calculateScore([dealerHand[0]]);
-        } else {
-            dealerScoreDisplay.textContent = dealerScore;
-        }
+    .action-button.primary-action {
+        padding: 10px 20px;
     }
 
-    function updateBalanceDisplay() {
-        balanceDisplay.textContent = `Balance: $${balance.toFixed(2)}`;
+    #game-header .balance {
+        font-size: 1em;
     }
-
-    function clearTable() {
-        dealerCardsContainer.innerHTML = '';
-        playerCardsContainer.innerHTML = '';
-        dealerScoreDisplay.textContent = '0';
-        playerScoreDisplay.textContent = '0';
-        gameMessage.textContent = 'Set your bet and click Deal!';
-        insuranceControls.classList.add('hidden');
-        playerHand = [];
-        dealerHand = [];
-        insuranceBet = 0;
-        playerScoreDisplay.classList.remove('win', 'lose', 'push');
-        dealerScoreDisplay.classList.remove('win', 'lose', 'push');
-    }
-
-    function toggleControls(showBetting) {
-        if (showBetting) {
-            bettingControlsUI.classList.remove('hidden');
-            inGameActionsUI.classList.add('hidden');
-            dealBetBtn.disabled = false;
-            betAmountInput.disabled = false;
-        } else {
-            bettingControlsUI.classList.add('hidden');
-            inGameActionsUI.classList.remove('hidden');
-            dealBetBtn.disabled = true;
-            betAmountInput.disabled = true;
-        }
-        hitBtn.disabled = false;
-        standBtn.disabled = false;
-        doubleDownBtn.disabled = false;
-    }
-
-    function placeBet() {
-        const bet = parseFloat(betAmountInput.value);
-        if (isNaN(bet) || bet < 0.01) {
-            gameMessage.textContent = "Please enter a valid bet of at least $0.01.";
-            return false;
-        }
-        if (bet > balance) {
-            gameMessage.textContent = "Insufficient balance for this bet.";
-            return false;
-        }
-        currentBet = bet;
-        balance -= currentBet;
-        updateBalanceDisplay();
-        gameMessage.textContent = `Bet of $${currentBet.toFixed(2)} placed. Dealing...`;
-        return true;
-    }
-
-    function startGame() {
-        if (gameInProgress) return;
-        if (!placeBet()) return;
-
-        gameInProgress = true;
-        playerTurn = true;
-        clearTable();
-        gameMessage.textContent = `Bet: $${currentBet.toFixed(2)}. Good luck!`;
-
-        createDeck();
-
-        dealCard(playerHand, playerCardsContainer, false);
-        playerHand[playerHand.length-1].isRevealed = true;
-        dealCard(dealerHand, dealerCardsContainer, true);
-        dealerHand[dealerHand.length-1].isRevealed = true;
-        dealCard(playerHand, playerCardsContainer, false);
-        playerHand[playerHand.length-1].isRevealed = true;
-        dealCard(dealerHand, dealerCardsContainer, true, true);
-        dealerHand[dealerHand.length-1].isRevealed = false;
-
-        updateScores();
-        toggleControls(false);
-
-        if (playerScore === 21) {
-            gameMessage.textContent = "Blackjack!";
-            playerTurn = false;
-            setTimeout(dealerPlaysIfNoBlackjack, 1500);
-            return;
-        }
-
-        const dealerUpCard = dealerHand[0];
-        if (dealerUpCard.value === 'A') {
-            offerInsurance();
-        } else {
-            doubleDownBtn.disabled = !(balance >= currentBet && playerHand.length === 2);
-        }
-    }
-
-    function dealerPlaysIfNoBlackjack() {
-        revealDealerHiddenCard();
-        updateScores();
-
-        playerScoreDisplay.classList.remove('win', 'lose', 'push');
-        dealerScoreDisplay.classList.remove('win', 'lose', 'push');
-
-        if (dealerScore === 21 && dealerHand.length === 2) {
-            gameMessage.textContent = "Dealer Blackjack! It's a Push!";
-            playerScoreDisplay.classList.add('push');
-            dealerScoreDisplay.classList.add('push');
-            balance += currentBet;
-        } else if (playerScore === 21) {
-            gameMessage.textContent = `Blackjack! You win $${(currentBet * 1.5).toFixed(2)}!`;
-            playerScoreDisplay.classList.add('win');
-            dealerScoreDisplay.classList.add('lose');
-            balance += currentBet + (currentBet * 1.5);
-        } else {
-            playerTurn = true;
-            doubleDownBtn.disabled = !(balance >= currentBet && playerHand.length === 2);
-            hitBtn.disabled = false;
-            standBtn.disabled = false;
-            return;
-        }
-        endRound();
-    }
-
-
-    function offerInsurance() {
-        insuranceControls.classList.remove('hidden');
-        insuranceMessage.textContent = `Dealer shows an Ace. Insurance pays 2 to 1. Cost: $${(currentBet / 2).toFixed(2)}`;
-        hitBtn.disabled = true;
-        standBtn.disabled = true;
-        doubleDownBtn.disabled = true;
-
-        takeInsuranceBtn.onclick = () => handleInsurance(true);
-        noInsuranceBtn.onclick = () => handleInsurance(false);
-    }
-
-    function handleInsurance(tookInsurance) {
-        insuranceControls.classList.add('hidden');
-        if (tookInsurance) {
-            const insuranceCost = currentBet / 2;
-            if (balance < insuranceCost) {
-                gameMessage.textContent = "Not enough balance for insurance. Declined.";
-            } else {
-                insuranceBet = insuranceCost;
-                balance -= insuranceBet;
-                updateBalanceDisplay();
-                gameMessage.textContent = `Insurance bet of $${insuranceBet.toFixed(2)} placed.`;
-            }
-        } else {
-            gameMessage.textContent = "Insurance declined.";
-        }
-
-        dealerHand[1].isRevealed = true;
-        const dealerHasBJ = calculateScore(dealerHand) === 21 && dealerHand.length === 2;
-        dealerHand[1].isRevealed = false;
-
-        playerScoreDisplay.classList.remove('win', 'lose', 'push');
-        dealerScoreDisplay.classList.remove('win', 'lose', 'push');
-
-        if (dealerHasBJ) {
-            revealDealerHiddenCard();
-            updateScores();
-            gameMessage.textContent = "Dealer has Blackjack!";
-            dealerScoreDisplay.classList.add('win');
-
-            if (insuranceBet > 0) {
-                const winnings = insuranceBet * 2;
-                balance += insuranceBet + winnings;
-                gameMessage.textContent += ` Insurance pays $${winnings.toFixed(2)}!`;
-                updateBalanceDisplay();
-            }
-
-            if(playerScore !== 21) {
-                playerScoreDisplay.classList.add('lose');
-            } else {
-                balance += currentBet;
-                playerScoreDisplay.classList.add('push');
-                dealerScoreDisplay.classList.add('push');
-                gameMessage.textContent += " Main hand is a Push!";
-            }
-            endRound();
-        } else {
-            gameMessage.textContent += (insuranceBet > 0 ? " Insurance bet lost." : " Dealer does not have Blackjack.");
-            hitBtn.disabled = false;
-            standBtn.disabled = false;
-            doubleDownBtn.disabled = !(balance >= currentBet && playerHand.length === 2);
-            playerTurn = true;
-        }
-    }
-
-    function revealDealerHiddenCard() {
-        const hiddenCardDiv = dealerCardsContainer.children[1];
-        if (hiddenCardDiv && hiddenCardDiv.classList.contains('face-down')) {
-            hiddenCardDiv.classList.remove('face-down');
-            const cardData = dealerHand[1];
-            dealerHand[1].isRevealed = true;
-
-            hiddenCardDiv.innerHTML = '';
-            const color = (cardData.suit === '♥' || cardData.suit === '♦') ? 'red' : 'black';
-            hiddenCardDiv.classList.add(color);
-
-            const cardInfoTopLeft = document.createElement('div');
-            cardInfoTopLeft.classList.add('card-info-top-left');
-
-            const rankDisplay = document.createElement('div');
-            rankDisplay.classList.add('rank');
-            rankDisplay.textContent = cardData.value;
-            cardInfoTopLeft.appendChild(rankDisplay);
-
-            const suitDisplay = document.createElement('div');
-            suitDisplay.classList.add('suit');
-            suitDisplay.textContent = cardData.suit;
-            cardInfoTopLeft.appendChild(suitDisplay);
-
-            hiddenCardDiv.appendChild(cardInfoTopLeft);
-        }
-    }
-
-    function playerHit() {
-        if (!gameInProgress || !playerTurn) return;
-        dealCard(playerHand, playerCardsContainer, false);
-        playerHand[playerHand.length-1].isRevealed = true;
-        updateScores();
-        doubleDownBtn.disabled = true;
-
-        if (playerScore > 21) {
-            gameMessage.textContent = `Player Busts with ${playerScore}! Dealer wins.`;
-            playerScoreDisplay.classList.remove('win', 'lose', 'push');
-            dealerScoreDisplay.classList.remove('win', 'lose', 'push');
-            playerScoreDisplay.classList.add('lose');
-            dealerScoreDisplay.classList.add('win');
-            endRound();
-        } else if (playerScore === 21) {
-            playerStand();
-        }
-    }
-
-    function playerStand() {
-        if (!gameInProgress || !playerTurn) return;
-        playerTurn = false;
-        gameMessage.textContent = "Player stands. Dealer's turn.";
-        hitBtn.disabled = true;
-        standBtn.disabled = true;
-        doubleDownBtn.disabled = true;
-        setTimeout(dealerPlay, 1000);
-    }
-
-    function playerDoubleDown() {
-        if (!gameInProgress || !playerTurn || playerHand.length !== 2) return;
-        if (balance < currentBet) {
-            gameMessage.textContent = "Not enough balance to double down.";
-            doubleDownBtn.disabled = true;
-            return;
-        }
-
-        balance -= currentBet;
-        currentBet *= 2;
-        updateBalanceDisplay();
-        gameMessage.textContent = `Player doubles down! Bet is now $${currentBet.toFixed(2)}.`;
-
-        dealCard(playerHand, playerCardsContainer, false);
-        playerHand[playerHand.length-1].isRevealed = true;
-        updateScores();
-
-        hitBtn.disabled = true;
-        standBtn.disabled = true;
-        doubleDownBtn.disabled = true;
-        playerTurn = false;
-
-        if (playerScore > 21) {
-            gameMessage.textContent = `Player Busts with ${playerScore} on double down! Dealer wins.`;
-            playerScoreDisplay.classList.remove('win', 'lose', 'push');
-            dealerScoreDisplay.classList.remove('win', 'lose', 'push');
-            playerScoreDisplay.classList.add('lose');
-            dealerScoreDisplay.classList.add('win');
-            endRound();
-        } else {
-            setTimeout(dealerPlay, 1000);
-        }
-    }
-
-    function dealerPlay() {
-        revealDealerHiddenCard();
-        updateScores();
-
-        function hitLoop() {
-            const currentDealerScore = calculateScore(dealerHand);
-            if (currentDealerScore < 17 || (currentDealerScore === 17 && dealerHand.some(c => c.value === 'A' && calculateScore(dealerHand.filter(card => card.value !== 'A')) + 11 === 17))) {
-                gameMessage.textContent = "Dealer hits...";
-                dealCard(dealerHand, dealerCardsContainer, true);
-                dealerHand[dealerHand.length-1].isRevealed = true;
-                updateScores();
-                const newDealerScore = calculateScore(dealerHand);
-                if (newDealerScore > 21) {
-                    gameMessage.textContent = `Dealer Busts with ${newDealerScore}! You win $${currentBet.toFixed(2)}!`;
-                    playerScoreDisplay.classList.remove('win', 'lose', 'push');
-                    dealerScoreDisplay.classList.remove('win', 'lose', 'push');
-                    playerScoreDisplay.classList.add('win');
-                    dealerScoreDisplay.classList.add('lose');
-                    balance += currentBet * 2;
-                    endRound();
-                } else {
-                    setTimeout(hitLoop, 1000);
-                }
-            } else {
-                determineWinner();
-            }
-        }
-        setTimeout(hitLoop, 500);
-    }
-
-    function determineWinner() {
-        updateScores();
-
-        const finalPlayerScore = calculateScore(playerHand);
-        const finalDealerScore = calculateScore(dealerHand);
-
-        playerScoreDisplay.classList.remove('win', 'lose', 'push');
-        dealerScoreDisplay.classList.remove('win', 'lose', 'push');
-
-        if (finalPlayerScore > 21) {
-            gameMessage.textContent = `Player Busts! Dealer wins.`;
-            playerScoreDisplay.classList.add('lose');
-            dealerScoreDisplay.classList.add('win');
-        } else if (finalDealerScore > 21) {
-            gameMessage.textContent = `Dealer Busts! You win $${currentBet.toFixed(2)}!`;
-            playerScoreDisplay.classList.add('win');
-            dealerScoreDisplay.classList.add('lose');
-            balance += currentBet * 2;
-        } else if (finalPlayerScore > finalDealerScore) {
-            gameMessage.textContent = `You win with ${finalPlayerScore} vs ${finalDealerScore}! Pays $${currentBet.toFixed(2)}.`;
-            playerScoreDisplay.classList.add('win');
-            dealerScoreDisplay.classList.add('lose');
-            balance += currentBet * 2;
-        } else if (finalDealerScore > finalPlayerScore) {
-            gameMessage.textContent = `Dealer wins with ${finalDealerScore} vs ${finalPlayerScore}.`;
-            playerScoreDisplay.classList.add('lose');
-            dealerScoreDisplay.classList.add('win');
-        } else {
-            gameMessage.textContent = `Push! It's a tie with ${finalPlayerScore}.`;
-            playerScoreDisplay.classList.add('push');
-            dealerScoreDisplay.classList.add('push');
-            balance += currentBet;
-        }
-        endRound();
-    }
-
-    function endRound() {
-        gameInProgress = false;
-        playerTurn = false;
-        updateBalanceDisplay();
-        toggleControls(true);
-        dealBetBtn.textContent = "DEAL";
-    }
-
-    // --- EVENT LISTENERS ---
-    dealBetBtn.addEventListener('click', () => {
-        if (dealBetBtn.textContent === "BET" || dealBetBtn.textContent === "DEAL") {
-            startGame();
-        }
-    });
-    hitBtn.addEventListener('click', playerHit);
-    standBtn.addEventListener('click', playerStand);
-    doubleDownBtn.addEventListener('click', playerDoubleDown);
-
-    betHalfBtn.addEventListener('click', () => {
-        let currentVal = parseFloat(betAmountInput.value) || 0;
-        betAmountInput.value = Math.max(0.01, currentVal / 2).toFixed(2);
-    });
-    betDoubleBtn.addEventListener('click', () => {
-        let currentVal = parseFloat(betAmountInput.value) || 0;
-        const newBet = Math.min(balance, currentVal * 2).toFixed(2);
-        betAmountInput.value = newBet;
-    });
-    betMaxBtn.addEventListener('click', () => {
-        betAmountInput.value = balance.toFixed(2);
-    });
-
-    // Initialize Game
-    updateBalanceDisplay();
-    toggleControls(true);
-    dealBetBtn.textContent = "BET";
-});
+}
