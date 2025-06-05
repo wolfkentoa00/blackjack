@@ -9,13 +9,15 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    overflow: hidden;
+    /* REMOVED: overflow: hidden; It's better to see and fix overflow issues. */
 }
 
 #game-container {
     width: 95%;
     max-width: 900px;
-    min-height: 600px;
+    /* CHANGED: Replaced min-height with a more flexible approach */
+    height: 95vh; /* Use viewport height */
+    max-height: 700px; /* Optional: sets a max height on very tall screens */
     background-color: #1a2c3a;
     border-radius: 10px;
     box-shadow: 0 0 30px rgba(0,0,0,0.5);
@@ -33,6 +35,7 @@ body {
     padding: 10px 20px;
     border-bottom: 1px solid #2a3f50;
     margin-bottom: 15px;
+    flex-shrink: 0; /* Prevents header from shrinking */
 }
 #game-header .balance {
     font-size: 1.2em;
@@ -45,31 +48,39 @@ body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around; /* Changed to space-around for better vertical distribution */
     padding: 10px 0;
+    overflow: hidden; /* Prevents cards from spilling out during animations */
 }
 
 .stake-logo {
     width: 90px !important;
     height: auto !important;
-    border: none; /* Removed the border for a cleaner look, add back if you like */
-    border-radius: 4px; /* Keeps slightly rounded corners if you add a border or background */
-    /* padding: 1px; Removed padding as there's no border */
-    /* box-shadow: 0 1px 3px rgba(0,0,0,0.1); Removed shadow, can be added back */
-    display: block; /* Ensures it behaves as a block element for layout */
+    border: none;
+    border-radius: 4px;
+    display: block;
 }
 
 .logo {
-    vertical-align: middle; /* Helps align if it were inline with text */
+    vertical-align: middle;
+}
+
+.center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .hand-area {
-    min-height: 90px; /* ← reduced from 100px */
+    /* CHANGED: Reduced min-height to allow for more flexibility */
+    min-height: 150px;
     position: relative;
     margin: 10px 0;
-    flex-shrink: 1; /* ← allow it to shrink */
+    display: flex; /* Added flex to help with card container alignment */
+    align-items: center;
+    justify-content: center;
 }
-
 
 .hand-label-container {
     display: flex;
@@ -77,7 +88,7 @@ body {
     margin-bottom: 10px;
     position: absolute;
     top: -5px;
-    right: 70px; /* Adjusted to move it from the far right edge */
+    right: 15px; /* Adjusted position */
     left: auto;
     transform: none;
     z-index: 1000;
@@ -102,47 +113,41 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.score-chip.win {
-    background-color: #5cb85c;
-}
-
-.score-chip.lose {
-    background-color: #ff1d1d;
-}
-
-.score-chip.push {
-    background-color: #5bc0de;
-}
+.score-chip.win { background-color: #5cb85c; }
+.score-chip.lose { background-color: #ff1d1d; }
+.score-chip.push { background-color: #5bc0de; }
 
 /* Cards Container and Card Styling */
 .cards-container {
-    min-height: 100px; /* ← reduced from 160px */
-    max-height: 30vh;  /* ← prevent it from growing too tall */
-    overflow-y: auto;  /* ← allow scrolling if needed */
+    position: relative;
+    /* CHANGED: Flexible height and width */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically center the card block */
 }
 
-
 .card {
-    width: 70px; /* CARD_ELEMENT_WIDTH in JS should match this */
-    height: 100px;
+    width: 80px;
+    height: 120px;
     background-color: #fff;
     border: 1px solid #bbb;
     border-radius: 8px;
     box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-    position: absolute; /* Cards are positioned by JS (left, top) */
-    padding: 5px; /* Internal padding of the card */
+    position: absolute;
+    padding: 5px;
     box-sizing: border-box;
     font-weight: bold;
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-    opacity: 0; /* Start hidden for animation */
-    transform-origin: center center; /* For any potential transform animations */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out, width 0.3s ease, height 0.3s ease; /* Added transitions for size */
+    opacity: 0;
+    transform-origin: center center;
 }
 
 .card.visible {
     opacity: 1;
 }
 
-/* Container for the top-left rank and suit */
 .card-info-top-left {
     position: absolute;
     top: 5px;
@@ -150,14 +155,12 @@ body {
     text-align: center;
 }
 
-/* Style for the rank in the top-left */
 .card-info-top-left .rank {
     font-size: 2em;
     line-height: 1;
     display: block;
 }
 
-/* Style for the suit in the top-left, under the rank */
 .card-info-top-left .suit {
     font-size: 3em;
     line-height: 1;
@@ -195,6 +198,7 @@ body {
     background-color: rgba(0,0,0,0.1);
     border-radius: 5px;
     margin: 10px 20px;
+    flex-shrink: 0; /* Prevents message area from shrinking */
 }
 #game-message {
     font-size: 1.1em;
@@ -220,6 +224,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-shrink: 0; /* Prevents controls from shrinking */
 }
 
 #betting-controls, #in-game-actions {
@@ -228,8 +233,9 @@ body {
     justify-content: center;
     width: 100%;
     flex-wrap: wrap;
+    gap: 10px; /* Use gap for spacing between flex items */
 }
-#betting-controls > div { margin: 5px 10px; }
+#betting-controls > div { margin: 0; /* Removed margin as gap is used now */ }
 
 .bet-amount-controls { display: flex; align-items: center; }
 .bet-amount-controls label { margin-right: 8px; font-size: 0.9em; }
@@ -251,7 +257,7 @@ body {
     font-size: 0.9em;
     font-weight: bold;
     cursor: pointer;
-    margin: 0 3px;
+    margin: 0; /* Removed margin */
     transition: background-color 0.2s ease, transform 0.1s ease;
     min-width: 60px;
 }
@@ -271,7 +277,7 @@ body {
 .action-button.primary-action {
     background-color: #2ecc71;
     color: #fff;
-    padding: 12px 25px; /* WAS: padding: 12 - MISSING px and SEMICOLON */
+    padding: 12px 25px; /* Corrected original code */
     font-size: 1em;
 }
 .action-button.primary-action:hover { background-color: #27ae60; }
@@ -284,3 +290,51 @@ body {
 .action-button:active, .bet-modifier-buttons button:active { transform: scale(0.97); }
 
 .hidden { display: none !important; }
+
+/* =============================================== */
+/* NEW: Media Queries for Responsiveness           */
+/* =============================================== */
+@media (max-width: 768px) and (max-height: 650px), (max-width: 480px) {
+
+    #game-container {
+        height: 100vh; /* Fill the entire screen height */
+        width: 100%;   /* Fill the entire screen width */
+        border-radius: 0;
+        padding: 5px;
+    }
+    
+    .hand-area {
+        min-height: 120px; /* Reduce hand area height */
+    }
+
+    /* Scale down the cards */
+    .card {
+        width: 60px;
+        height: 90px;
+    }
+    .card-info-top-left .rank {
+        font-size: 1.5em;
+    }
+    .card-info-top-left .suit {
+        font-size: 2em;
+    }
+
+    /* Adjust control buttons for smaller screens */
+    #betting-controls {
+        flex-direction: column; /* Stack betting controls */
+        gap: 15px;
+    }
+
+    .action-button, .bet-modifier-buttons button {
+        padding: 8px 12px;
+        font-size: 0.8em;
+    }
+
+    .action-button.primary-action {
+        padding: 10px 20px;
+    }
+
+    #game-header .balance {
+        font-size: 1em;
+    }
+}
