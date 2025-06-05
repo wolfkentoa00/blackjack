@@ -98,13 +98,27 @@ document.addEventListener('DOMContentLoaded', () => {
             cardDiv.appendChild(cardInfoTopLeft);
         }
 
-        const containerWidth = container.offsetWidth;
+        // --- Card Positioning Logic ---
+        const containerWidth = container.offsetWidth; // Get the current width of the card container div
+
+        // Determine the number of cards currently in the specific hand being rendered.
+        // currentHandRef should be the actual hand array (playerHand or dealerHand).
         const handCardCount = currentHandRef && currentHandRef.length > 0 ? currentHandRef.length : 1;
+
+        // Calculate the total visual width that all cards in this hand will occupy.
+        // This includes the width of one card, plus the accumulated horizontal offsets for subsequent cards.
         const totalVisualWidthOfHand = (handCardCount - 1) * CARD_X_OFFSET + CARD_ELEMENT_WIDTH;
+
+        // Calculate the starting 'left' position for the first card in the hand
+        // to ensure the entire group of cards is centered within the container.
+        // It's the center of the container minus half the total width of the hand.
         const baseLeftOffsetForCentering = (containerWidth / 2) - (totalVisualWidthOfHand / 2);
+
+        // The actual 'left' position for the current card (cardIndex) is:
+        // the centering offset + its own offset based on its position in the hand.
         cardDiv.style.left = (baseLeftOffsetForCentering + (cardIndex * CARD_X_OFFSET)) + 'px';
-        cardDiv.style.top = (cardIndex * CARD_Y_OFFSET) + 'px';
-        cardDiv.style.zIndex = cardIndex;
+        cardDiv.style.top = (cardIndex * CARD_Y_OFFSET) + 'px'; // Stacking offset from the top
+        cardDiv.style.zIndex = cardIndex; // Ensures cards stack with later cards on top
 
         container.appendChild(cardDiv);
         setTimeout(() => cardDiv.classList.add('visible'), 50 + (cardIndex * 100));
@@ -177,9 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function placeBet() {
-        const bet = parseFloat(betAmountInput.value);
-        if (isNaN(bet) || bet < 0.01) {
-            gameMessage.textContent = "Please enter a valid bet of at least $0.01.";
+        const bet = parseInt(betAmountInput.value);
+        if (isNaN(bet) || bet <= 0) {
+            gameMessage.textContent = "Please enter a valid bet amount.";
             return false;
         }
         if (bet > balance) {
@@ -189,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentBet = bet;
         balance -= currentBet;
         updateBalanceDisplay();
-        gameMessage.textContent = `Bet of $${currentBet.toFixed(2)} placed. Dealing...`;
+        gameMessage.textContent = `Bet of $${currentBet} placed. Dealing...`;
         return true;
     }
 
@@ -200,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameInProgress = true;
         playerTurn = true;
         clearTable();
-        gameMessage.textContent = `Bet: $${currentBet.toFixed(2)}. Good luck!`;
+        gameMessage.textContent = `Bet: $${currentBet}. Good luck!`;
 
         createDeck();
 
@@ -392,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
         balance -= currentBet;
         currentBet *= 2;
         updateBalanceDisplay();
-        gameMessage.textContent = `Player doubles down! Bet is now $${currentBet.toFixed(2)}.`;
+        gameMessage.textContent = `Player doubles down! Bet is now $${currentBet}.`;
 
         dealCard(playerHand, playerCardsContainer, false);
         playerHand[playerHand.length-1].isRevealed = true;
@@ -428,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateScores();
                 const newDealerScore = calculateScore(dealerHand);
                 if (newDealerScore > 21) {
-                    gameMessage.textContent = `Dealer Busts with ${newDealerScore}! You win $${currentBet.toFixed(2)}!`;
+                    gameMessage.textContent = `Dealer Busts with ${newDealerScore}! You win $${currentBet}!`;
                     playerScoreDisplay.classList.remove('win', 'lose', 'push');
                     dealerScoreDisplay.classList.remove('win', 'lose', 'push');
                     playerScoreDisplay.classList.add('win');
@@ -459,12 +473,12 @@ document.addEventListener('DOMContentLoaded', () => {
             playerScoreDisplay.classList.add('lose');
             dealerScoreDisplay.classList.add('win');
         } else if (finalDealerScore > 21) {
-            gameMessage.textContent = `Dealer Busts! You win $${currentBet.toFixed(2)}!`;
+            gameMessage.textContent = `Dealer Busts! You win $${currentBet}!`;
             playerScoreDisplay.classList.add('win');
             dealerScoreDisplay.classList.add('lose');
             balance += currentBet * 2;
         } else if (finalPlayerScore > finalDealerScore) {
-            gameMessage.textContent = `You win with ${finalPlayerScore} vs ${finalDealerScore}! Pays $${currentBet.toFixed(2)}.`;
+            gameMessage.textContent = `You win with ${finalPlayerScore} vs ${finalDealerScore}! Pays $${currentBet}.`;
             playerScoreDisplay.classList.add('win');
             dealerScoreDisplay.classList.add('lose');
             balance += currentBet * 2;
@@ -500,16 +514,16 @@ document.addEventListener('DOMContentLoaded', () => {
     doubleDownBtn.addEventListener('click', playerDoubleDown);
 
     betHalfBtn.addEventListener('click', () => {
-        let currentVal = parseFloat(betAmountInput.value) || 0;
-        betAmountInput.value = Math.max(0.01, currentVal / 2).toFixed(2);
+        let currentVal = parseInt(betAmountInput.value) || 0;
+        betAmountInput.value = Math.max(1, Math.floor(currentVal / 2));
     });
     betDoubleBtn.addEventListener('click', () => {
-        let currentVal = parseFloat(betAmountInput.value) || 0;
-        const newBet = Math.min(balance, currentVal * 2).toFixed(2);
-        betAmountInput.value = newBet;
+        let currentVal = parseInt(betAmountInput.value) || 0;
+        const newBet = Math.min(balance, currentVal * 2);
+        betAmountInput.value = newBet > 0 ? newBet : (currentVal > 0 ? currentVal : 1);
     });
     betMaxBtn.addEventListener('click', () => {
-        betAmountInput.value = balance.toFixed(2);
+        betAmountInput.value = Math.max(1, balance);
     });
 
     // Initialize Game
